@@ -9,6 +9,8 @@ app = Flask(__name__)
 # Store the last recommended item in memory (no database needed)
 last_recommended_item = None
 
+
+
 # LLM Configuration
 LLM_API_KEY = os.getenv('ANTHROPIC_API_KEY', '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')
 LLM_BASE_URL = "https://api.anthropic.com/v1/messages"
