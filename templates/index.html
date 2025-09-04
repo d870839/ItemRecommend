@@ -296,7 +296,10 @@
         </button>
         
         <div class="loading" id="loading">
-            ✨ Analyzing trends and generating recommendation...
+            <div id="loading-text">✨ Analyzing trends and generating recommendation...</div>
+            <div id="llm-indicator" style="display: none; font-size: 0.9rem; margin-top: 0.5rem; color: #084999;">
+                🤖 Using AI to create wild new combinations...
+            </div>
         </div>
         
         <div class="recommendation-container">
@@ -314,6 +317,7 @@
         <div class="stats" id="stats">
             <strong>📊 Recommendation Stats:</strong><br>
             <span id="statsContent">Click the button to see your first recommendation!</span>
+            <div id="llm-status" style="margin-top: 0.5rem; font-size: 0.8rem; color: #4B2E2E;"></div>
         </div>
     </div>
 
@@ -374,12 +378,24 @@
             const button = document.querySelector('.recommend-button');
             const loading = document.getElementById('loading');
             const recommendation = document.getElementById('recommendation');
+            const llmIndicator = document.getElementById('llm-indicator');
             
             // Show loading state
             button.disabled = true;
             button.textContent = '✨ Generating...';
             loading.style.display = 'block';
             recommendation.style.display = 'none';
+            
+            // Check if LLM is enabled and show appropriate loading message
+            try {
+                const configResponse = await fetch('/config');
+                const config = await configResponse.json();
+                if (config.llm_enabled) {
+                    llmIndicator.style.display = 'block';
+                }
+            } catch (error) {
+                console.log('Could not check LLM status');
+            }
             
             try {
                 const response = await fetch('/recommend', {
@@ -423,9 +439,10 @@
                 console.error('Error:', error);
                 alert('Failed to get recommendation. Please try again.');
             } finally {
-                // Reset button
+                // Reset button and hide LLM indicator
                 button.disabled = false;
                 button.textContent = '🚀 Get New Recommendation';
+                llmIndicator.style.display = 'none';
             }
         }
 
@@ -434,6 +451,13 @@
                 const response = await fetch('/stats');
                 const data = await response.json();
                 
+                let llmStatus = '';
+                if (data.llm_enabled) {
+                    llmStatus = '<div style="color: #084999; font-weight: bold;">🤖 AI-Powered Recommendations Active</div>';
+                } else {
+                    llmStatus = '<div style="color: #4B2E2E;">📚 Using Curated Recommendations</div>';
+                }
+                
                 document.getElementById('statsContent').innerHTML = `
                     <strong>📊 Recommendation Stats:</strong><br>
                     Total Recommendations: ${recommendationCount}<br>
@@ -441,6 +465,8 @@
                     Categories: ${Object.keys(data.categories).join(', ')}<br>
                     Priority Levels: ${Object.keys(data.priorities).join(', ')}
                 `;
+                
+                document.getElementById('llm-status').innerHTML = llmStatus;
             } catch (error) {
                 console.error('Error fetching stats:', error);
             }
