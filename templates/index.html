@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Selection Item Recommender</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommend-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .recommend-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .recommend-button:active {
+            transform: translateY(-1px);
+        }
+
+        .recommendation-container {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(116, 185, 255, 0.3);
+            margin: 1rem 0;
+            max-width: 600px;
+            width: 100%;
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .recommendation.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .item-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .item-description {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .item-category {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-priority {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .item-reason {
+            font-size: 1rem;
+            margin-top: 1rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .loading {
+            display: none;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .stats {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        /* Fireworks Animation */
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: firework 1s ease-out forwards;
+        }
+
+        @keyframes firework {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        .firework-trail {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: trail 0.5s ease-out forwards;
+        }
+
+        @keyframes trail {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti:nth-child(2n) {
+            background: #4ecdc4;
+            animation-delay: 0.5s;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #45b7d1;
+            animation-delay: 1s;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #f9ca24;
+            animation-delay: 1.5s;
+        }
+
+        .confetti:nth-child(5n) {
+            background: #6c5ce7;
+            animation-delay: 2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Private Selection Item Recommender</h1>
+        <p class="subtitle">Get AI-powered recommendations for new Private Selection products</p>
+        
+        <button class="recommend-button" onclick="getRecommendation()">
+            🚀 Get New Recommendation
+        </button>
+        
+        <div class="loading" id="loading">
+            ✨ Analyzing trends and generating recommendation...
+        </div>
+        
+        <div class="recommendation-container">
+            <div class="recommendation" id="recommendation" style="display: none;">
+                <div class="item-name" id="itemName"></div>
+                <div class="item-description" id="itemDescription"></div>
+                <div>
+                    <span class="item-category" id="itemCategory"></span>
+                    <span class="item-priority" id="itemPriority"></span>
+                </div>
+                <div class="item-reason" id="itemReason"></div>
+            </div>
+        </div>
+        
+        <div class="stats" id="stats">
+            <strong>📊 Recommendation Stats:</strong><br>
+            <span id="statsContent">Click the button to see your first recommendation!</span>
+        </div>
+    </div>
+
+    <script>
+        let recommendationCount = 0;
+
+        function createFireworks() {
+            const container = document.querySelector('.container');
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a55eea'];
+            
+            // Create multiple fireworks
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.top = Math.random() * 100 + '%';
+                    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    container.appendChild(firework);
+                    
+                    // Create trails
+                    for (let j = 0; j < 5; j++) {
+                        setTimeout(() => {
+                            const trail = document.createElement('div');
+                            trail.className = 'firework-trail';
+                            trail.style.left = firework.style.left;
+                            trail.style.top = firework.style.top;
+                            trail.style.background = firework.style.background;
+                            container.appendChild(trail);
+                        }, j * 50);
+                    }
+                    
+                    // Remove elements after animation
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 1000);
+                }, i * 100);
+            }
+        }
+
+        function createConfetti() {
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        async function getRecommendation() {
+            const button = document.querySelector('.recommend-button');
+            const loading = document.getElementById('loading');
+            const recommendation = document.getElementById('recommendation');
+            
+            // Show loading state
+            button.disabled = true;
+            button.textContent = '✨ Generating...';
+            loading.style.display = 'block';
+            recommendation.style.display = 'none';
+            
+            try {
+                const response = await fetch('/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Hide loading
+                    loading.style.display = 'none';
+                    
+                    // Update recommendation content
+                    document.getElementById('itemName').textContent = data.recommendation.name;
+                    document.getElementById('itemDescription').textContent = data.recommendation.description;
+                    document.getElementById('itemCategory').textContent = data.recommendation.category;
+                    document.getElementById('itemPriority').textContent = data.recommendation.priority + ' Priority';
+                    document.getElementById('itemReason').textContent = data.recommendation.reason;
+                    
+                    // Show recommendation with animation
+                    recommendation.style.display = 'block';
+                    setTimeout(() => {
+                        recommendation.classList.add('show');
+                    }, 100);
+                    
+                    // Create fireworks and confetti
+                    createFireworks();
+                    createConfetti();
+                    
+                    // Update stats
+                    recommendationCount++;
+                    updateStats();
+                    
+                } else {
+                    throw new Error(data.error || 'Failed to get recommendation');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get recommendation. Please try again.');
+            } finally {
+                // Reset button
+                button.disabled = false;
+                button.textContent = '🚀 Get New Recommendation';
+            }
+        }
+
+        async function updateStats() {
+            try {
+                const response = await fetch('/stats');
+                const data = await response.json();
+                
+                document.getElementById('statsContent').innerHTML = `
+                    <strong>📊 Recommendation Stats:</strong><br>
+                    Total Recommendations: ${recommendationCount}<br>
+                    Available Items: ${data.total_items}<br>
+                    Categories: ${Object.keys(data.categories).join(', ')}<br>
+                    Priority Levels: ${Object.keys(data.priorities).join(', ')}
+                `;
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        // Load stats on page load
+        window.addEventListener('load', updateStats);
+    </script>
+</body>
+</html>
