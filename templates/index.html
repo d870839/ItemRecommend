@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'ITC Avant Garde Gothic Std', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #4B2E2E 0%, #084999 50%, #2E1A1A 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -24,47 +24,51 @@
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8F8F8 100%);
             padding: 3rem;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(8, 73, 153, 0.2);
             backdrop-filter: blur(10px);
             max-width: 800px;
             width: 90%;
             position: relative;
             z-index: 10;
+            border: 3px solid #084999;
         }
 
         h1 {
-            color: #2c3e50;
+            color: #084999;
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 2px 2px 4px rgba(8, 73, 153, 0.3);
+            font-weight: bold;
         }
 
         .subtitle {
-            color: #7f8c8d;
+            color: #4B2E2E;
             font-size: 1.2rem;
             margin-bottom: 2rem;
+            font-weight: 500;
         }
 
         .recommend-button {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(45deg, #084999, #4B2E2E);
             color: white;
-            border: none;
+            border: 2px solid #D2B48C;
             padding: 1rem 2rem;
             font-size: 1.3rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 10px 20px rgba(8, 73, 153, 0.3);
             margin-bottom: 2rem;
         }
 
         .recommend-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 15px 30px rgba(8, 73, 153, 0.4);
+            background: linear-gradient(45deg, #4B2E2E, #084999);
         }
 
         .recommend-button:active {
@@ -81,17 +85,18 @@
         }
 
         .recommendation {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            background: linear-gradient(135deg, #084999, #4B2E2E);
             color: white;
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 15px 30px rgba(116, 185, 255, 0.3);
+            box-shadow: 0 15px 30px rgba(8, 73, 153, 0.3);
             margin: 1rem 0;
             max-width: 600px;
             width: 100%;
             transform: scale(0);
             opacity: 0;
             transition: all 0.5s ease;
+            border: 2px solid #D2B48C;
         }
 
         .recommendation.show {
@@ -114,20 +119,22 @@
 
         .item-category {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(210, 180, 140, 0.3);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
+            border: 1px solid #D2B48C;
         }
 
         .item-priority {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(210, 180, 140, 0.3);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.9rem;
             margin-left: 0.5rem;
+            border: 1px solid #D2B48C;
         }
 
         .item-reason {
@@ -146,10 +153,11 @@
         .stats {
             margin-top: 2rem;
             padding: 1rem;
-            background: rgba(52, 152, 219, 0.1);
+            background: rgba(8, 73, 153, 0.1);
             border-radius: 10px;
             font-size: 0.9rem;
-            color: #2c3e50;
+            color: #084999;
+            border: 1px solid #D2B48C;
         }
 
         /* Fireworks Animation */
@@ -202,7 +210,7 @@
             position: absolute;
             width: 10px;
             height: 10px;
-            background: #ff6b6b;
+            background: #084999;
             animation: confetti-fall 3s linear infinite;
         }
 
@@ -218,29 +226,69 @@
         }
 
         .confetti:nth-child(2n) {
-            background: #4ecdc4;
+            background: #4B2E2E;
             animation-delay: 0.5s;
         }
 
         .confetti:nth-child(3n) {
-            background: #45b7d1;
+            background: #D2B48C;
             animation-delay: 1s;
         }
 
         .confetti:nth-child(4n) {
-            background: #f9ca24;
+            background: #D8B07F;
             animation-delay: 1.5s;
         }
 
         .confetti:nth-child(5n) {
-            background: #6c5ce7;
+            background: #084999;
             animation-delay: 2s;
+        }
+
+        /* Private Selection Brand Header */
+        .brand-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .private-selection-logo {
+            background: linear-gradient(135deg, #4B2E2E, #2E1A1A);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            border: 2px solid #D2B48C;
+            box-shadow: 0 8px 16px rgba(8, 73, 153, 0.2);
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-accent {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #D2B48C, #D8B07F, #D2B48C);
+            border-radius: 2px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎯 Private Selection Item Recommender</h1>
+        <div class="brand-header">
+            <div class="private-selection-logo">
+                <span class="logo-text">PRIVATE SELECTION</span>
+                <div class="logo-accent"></div>
+            </div>
+        </div>
+        <h1>🎯 Item Recommender</h1>
         <p class="subtitle">Get AI-powered recommendations for new Private Selection products</p>
         
         <button class="recommend-button" onclick="getRecommendation()">
@@ -274,7 +322,7 @@
 
         function createFireworks() {
             const container = document.querySelector('.container');
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a55eea'];
+            const colors = ['#084999', '#4B2E2E', '#D2B48C', '#D8B07F', '#2E1A1A', '#F8F8F8'];
             
             // Create multiple fireworks
             for (let i = 0; i < 15; i++) {
